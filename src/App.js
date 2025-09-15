@@ -9,8 +9,11 @@ import Question from "./components/Question";
 
 const initialState = {
   questions: [],
-  // 'loading', 'error', 'ready', 'activate', 'finish'
+  // 'loading', 'error', 'ready', 'active', 'finish'
   status: "loading",
+  currentIndex: 0,
+  answer: null,
+  points: 0,
 };
 
 function reducer(state, action) {
@@ -21,6 +24,18 @@ function reducer(state, action) {
     }
     case "dataFailed":
       return { ...state, status: "error" };
+    case "startGame":
+      return { ...state, status: "active" };
+    case "newAnswer":
+      const question = state.questions.at(state.currentIndex);
+      return {
+        ...state,
+        answer: action.payload,
+        points:
+          action.payload === question.correctOption
+            ? state.points + question.points
+            : state.points,
+      };
     default:
       throw new Error("Unknown action");
   }
@@ -29,7 +44,7 @@ function reducer(state, action) {
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const { questions, status } = state;
+  const { questions, status, currentIndex, answer } = state;
 
   const numQuestions = questions.length;
 
@@ -46,8 +61,16 @@ function App() {
       <Main>
         {status === "loading" && <Loader />}
         {status === "error" && <Error />}
-        {status === "ready" && <StartScreen numQuestions={numQuestions} />}
-        {status === "active" && <Question />}
+        {status === "ready" && (
+          <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
+        )}
+        {status === "active" && (
+          <Question
+            questionObj={questions[currentIndex]}
+            dispatch={dispatch}
+            answer={answer}
+          />
+        )}
       </Main>
     </div>
   );
