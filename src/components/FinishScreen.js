@@ -1,6 +1,12 @@
 import React from "react";
+import RestartButton from "./RestartButton";
 
-export default function FinishScreen({ points, maxPossiblePoints, highscore }) {
+export default function FinishScreen({
+  points,
+  maxPossiblePoints,
+  highscore,
+  dispatch,
+}) {
   const percentage = (points / maxPossiblePoints) * 100;
 
   let emoji;
@@ -16,6 +22,7 @@ export default function FinishScreen({ points, maxPossiblePoints, highscore }) {
         {maxPossiblePoints} ({Math.ceil(percentage)}%)
       </p>
       <p className="highscore">(High score: {highscore} points)</p>
+      <RestartButton dispatch={dispatch} />
     </>
   );
 }
