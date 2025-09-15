@@ -7,6 +7,6 @@ import DateCounter from "./DateCounter";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <DateCounter />
+    <App />
   </React.StrictMode>
 );
